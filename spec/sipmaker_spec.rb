@@ -2,19 +2,20 @@ require 'spec_helper'
 
 describe 'SIPMaker' do
   it 'SIPMaker#new()' do
-    obj_dir = "/tmp/foo"
-    sip_dir = "/tmp/bar"
-    sipmaker = SIPMaker.new(obj_dir, sip_dir)  # Given
-    objdir = sipmaker.objdir    # When
-    expect(objdir).to eq(obj_dir)  # Then
-    expect(sipmaker.sipdir).to eq(sip_dir)
+    sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+    issue_path = sipmaker.issue_path
+    expect(issue_path).to eq('bmtnaad/issues/1922/04_01')
   end
 
-  it 'SIPMaker#list' do
-    obj_dir = "/tmp/foo"
-    sip_dir = "/tmp/bar"
-    sipmaker = SIPMaker.new(obj_dir, sip_dir)  # Given
-    filelist = sipmaker.list
-    expect(filelist).not_to be_empty
+  it 'SIPMaker#image_dir' do
+    sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+    expect(sipmaker.image_dir.path).to eq('/usr/share/BlueMountain/astore/periodicals/bmtnaad/issues/1922/04_01/delivery')
   end
+
+  it 'SIPMaker#sip_dir' do
+    sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+    expect(sipmaker.sip_dir.path).to eq('/tmp/sip/bmtnaad/issues/1922/04_01')
+
+  end
+
 end
