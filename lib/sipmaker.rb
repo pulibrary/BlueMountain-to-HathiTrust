@@ -1,6 +1,7 @@
 # sipmaker.rb
 require 'tmpdir'
 require 'fileutils'
+require 'nokogiri'
 
 class SIPMaker
   attr_reader     :bmtn_root
@@ -45,6 +46,20 @@ class SIPMaker
     @alto_dir.each do |f|
       if f =~ /\.alto\.xml$/
         FileUtils.cp File.join(@alto_dir.path, f),  @sip_dir
+      end
+    end
+  end
+
+  def generate_txt_files
+    template = Nokogiri::XSLT(File.read('/home/cwulfman/work/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
+    @alto_dir.each do |filename|
+      if filename =~ /\.alto\.xml$/
+        filepath = File.join(@alto_dir.path, filename)
+        document = Nokogiri::XML(File.read(filepath))
+        text_doc = template.transform(document)
+
+        text_file_name = File.join(@sip_dir.path, filename.sub("alto.xml", "txt"))
+        File.open(text_file_name, 'w').write(text_doc)
       end
     end
   end

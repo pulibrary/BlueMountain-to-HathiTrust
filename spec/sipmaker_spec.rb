@@ -1,21 +1,20 @@
 require 'spec_helper'
 
-describe 'SIPMaker' do
-  it 'SIPMaker#new()' do
-    sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
-    issue_path = sipmaker.issue_path
-    expect(issue_path).to eq('bmtnaad/issues/1922/04_01')
+RSpec.describe 'SIPMaker' do
+  describe '#new' do
+    context "with a valid blue mountain object" do
+      it "contains a valid issue path" do
+        sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+        issue_path = sipmaker.issue_path
+        expect(issue_path).to eq('bmtnaad/issues/1922/04_01')
+      end
+    end
   end
 
-  it 'SIPMaker#image_dir' do
-    sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
-    expect(sipmaker.image_dir.path).to eq('/usr/share/BlueMountain/astore/periodicals/bmtnaad/issues/1922/04_01/delivery')
+  describe '#generate_txt_files' do
+    it "creates text files" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.generate_txt_files
+    end
   end
-
-  it 'SIPMaker#sip_dir' do
-    sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
-    expect(sipmaker.sip_dir.path).to eq('/tmp/sip/bmtnaad/issues/1922/04_01')
-
-  end
-
 end
