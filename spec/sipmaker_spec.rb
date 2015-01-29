@@ -15,6 +15,7 @@ RSpec.describe 'SIPMaker' do
     it "creates text files" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
       sipmaker.generate_txt_files
+      expect(File.file?(File.join(sipmaker.sip_dir, 'bmtnaad_1922-04_01_0008.txt'))).to be_truthy
     end
   end
 
@@ -25,5 +26,41 @@ RSpec.describe 'SIPMaker' do
       expect(File.file?(File.join(sipmaker.sip_dir, 'meta.yml'))).to be_truthy
     end
   end
+
+  describe '.copy_alto_files' do
+    it "copies the last alto file" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.copy_alto_files
+      expect(File.file?(File.join(sipmaker.sip_dir, 'bmtnaad_1922-04_01_0008.alto.xml'))).to be_truthy
+    end
+  end
+
+  describe '.copy_images' do
+    it "copies the last image file" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.copy_images
+      expect(File.file?(File.join(sipmaker.sip_dir, 'bmtnaad_1922-04_01_0008.jp2'))).to be_truthy
+    end
+  end
+
+  describe '.update_checksums' do
+    it "updates the checksum hash" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.write_meta_file                      # make sure there's a file to checksum
+      sipmaker.update_checksums
+    end
+  end
+
+  describe '.write_checksums' do
+    it "writes the checksum file" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.write_meta_file                      # make sure there's a file to checksum
+      sipmaker.update_checksums
+      sipmaker.write_checksum_file
+      expect(File.file?(File.join(sipmaker.sip_dir, 'checksum.md5'))).to be_truthy
+    end
+  end
+
+
 end
 

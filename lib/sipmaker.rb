@@ -3,6 +3,7 @@ require 'tmpdir'
 require 'fileutils'
 require 'nokogiri'
 require 'yaml'
+require 'digest'
 
 class SIPMaker
   attr_reader     :bmtn_root
@@ -63,6 +64,7 @@ class SIPMaker
   def initialize(issueid)
     @bmtn_root = '/usr/share/BlueMountain'
     @sip_root  = '/tmp/sip'
+    @checksums = {}
 
     # an issueid has the format bmtnxxx_datestring_issuance. E.g., bmtnaap_1921-11_01
 
@@ -75,7 +77,7 @@ class SIPMaker
     unless Dir.exists?(sip_path) 
       FileUtils.mkdir_p(sip_path)
     end
-    @sip_dir = Dir.new(sip_path) 
+    @sip_dir = Dir.new(sip_path)
   end
 
   def meta
@@ -117,6 +119,23 @@ class SIPMaker
 
   def write_meta_file
     File.open(File.join(@sip_dir.path, "meta.yml"), 'w').write(self.meta)
+  end
+
+  def update_checksums
+    @sip_dir.each do |f|
+      fp = File.join(@sip_dir, f)
+      @checksums[f] = Digest::MD5.file(fp).hexdigest if File.file?(fp)
+    end
+  end
+
+  def checksums
+    @checksums.each do |k,v|
+      puts "#{k} #{v}"
+    end
+  end
+
+  def write_checksum_file
+    File.open(File.join(@sip_dir.path, "checksum.md5"), 'wb') {|f| @checksums.each {|k,v| f << "#{k} #{v}\n"} }
   end
 
 end
