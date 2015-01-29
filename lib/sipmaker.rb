@@ -64,6 +64,8 @@ class SIPMaker
     @bmtn_root = '/usr/share/BlueMountain'
     @sip_root  = '/tmp/sip'
 
+    # an issueid has the format bmtnxxx_datestring_issuance. E.g., bmtnaap_1921-11_01
+
     @bmtnid,issuedate,edition = issueid.match(/^([^_]+)_([^_]+)_([0-9]{2})$/).captures
     @issue_path = File.join(@bmtnid,'issues',(issuedate.sub('-','/') + '_' + edition))
     @image_dir = Dir.new(File.join(@bmtn_root, 'astore', 'periodicals', @issue_path, 'delivery'))
@@ -97,7 +99,10 @@ class SIPMaker
   end
 
   def generate_txt_files
-    template = Nokogiri::XSLT(File.read('/home/cwulfman/work/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
+    # TODO parameterize this!
+
+#    template = Nokogiri::XSLT(File.read('/home/cwulfman/work/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
+    template = Nokogiri::XSLT(File.read('/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
     @alto_dir.each do |filename|
       if filename =~ /\.alto\.xml$/
         filepath = File.join(@alto_dir.path, filename)
