@@ -70,6 +70,7 @@ class SIPMaker
 
     @bmtnid,issuedate,edition = issueid.match(/^([^_]+)_([^_]+)_([0-9]{2})$/).captures
     @issue_path = File.join(@bmtnid,'issues',(issuedate.sub('-','/') + '_' + edition))
+    @image_path = File.join(@bmtn_root, 'astore', 'periodicals', @issue_path, 'delivery')
     @image_dir = Dir.new(File.join(@bmtn_root, 'astore', 'periodicals', @issue_path, 'delivery'))
     @meta_dir = Dir.new(File.join(@bmtn_root, 'metadata', 'periodicals', @issue_path))
     @alto_dir = Dir.new(File.join(@bmtn_root, 'metadata', 'periodicals', @issue_path, 'alto'))
@@ -84,7 +85,7 @@ class SIPMaker
     @@meta[@bmtnid].to_yaml
   end
 
-  def copy_images
+  def copy_images_old
     @image_dir.each do |f|
       if f =~ /\.jp2$/
         FileUtils.cp File.join(@image_dir.path, f),  @sip_dir
@@ -92,10 +93,32 @@ class SIPMaker
     end
   end
 
-  def copy_alto_files
+  def copy_images
+    Dir.glob(File.join(@image_path, '*.jp2')).each_with_index do |f,i|
+      target = File.join(@sip_dir.path, (seq_number(f) + '.jp2'))
+      FileUtils.cp f, target                   
+    end
+  end
+
+  def seq_number(filepath)
+    num = filepath.split('_').last.split('.').first
+    #    "%08d" % filepath.split('_').last.split('.').first
+    "%08d" % num.to_i
+  end
+
+  def copy_alto_files_old
     @alto_dir.each do |f|
       if f =~ /\.alto\.xml$/
         FileUtils.cp File.join(@alto_dir.path, f),  @sip_dir
+      end
+    end
+  end
+
+  def copy_alto_files
+    @alto_dir.each do |f|
+      if f =~ /\.alto\.xml$/
+        target = File.join(@sip_dir.path, (seq_number(f) + '.alto.xml'))
+        FileUtils.cp File.join(@alto_dir.path, f),  target
       end
     end
   end
@@ -107,12 +130,12 @@ class SIPMaker
     template = Nokogiri::XSLT(File.read('/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
     @alto_dir.each do |filename|
       if filename =~ /\.alto\.xml$/
+        target = File.join(@sip_dir.path, (seq_number(filename) + '.txt'))
         filepath = File.join(@alto_dir.path, filename)
         document = Nokogiri::XML(File.read(filepath))
         text_doc = template.transform(document)
 
-        text_file_name = File.join(@sip_dir.path, filename.sub("alto.xml", "txt"))
-        File.open(text_file_name, 'w').write(text_doc)
+        File.open(target, 'w').write(text_doc)
       end
     end
   end

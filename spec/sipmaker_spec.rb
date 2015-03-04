@@ -15,7 +15,7 @@ RSpec.describe 'SIPMaker' do
     it "creates text files" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
       sipmaker.generate_txt_files
-      expect(File.file?(File.join(sipmaker.sip_dir, 'bmtnaad_1922-04_01_0008.txt'))).to be_truthy
+      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.txt'))).to be_truthy
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe 'SIPMaker' do
     it "copies the last alto file" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
       sipmaker.copy_alto_files
-      expect(File.file?(File.join(sipmaker.sip_dir, 'bmtnaad_1922-04_01_0008.alto.xml'))).to be_truthy
+      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.alto.xml'))).to be_truthy
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe 'SIPMaker' do
     it "copies the last image file" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
       sipmaker.copy_images
-      expect(File.file?(File.join(sipmaker.sip_dir, 'bmtnaad_1922-04_01_0008.jp2'))).to be_truthy
+      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.jp2'))).to be_truthy
     end
   end
 
