@@ -31,7 +31,7 @@ RSpec.describe 'SIPMaker' do
     it "copies the last alto file" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
       sipmaker.copy_alto_files
-      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.alto.xml'))).to be_truthy
+      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.xml'))).to be_truthy
     end
   end
 
@@ -40,6 +40,14 @@ RSpec.describe 'SIPMaker' do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
       sipmaker.copy_images
       expect(File.file?(File.join(sipmaker.sip_dir, '00000008.jp2'))).to be_truthy
+    end
+  end
+
+  describe '.write_marcxml_file' do
+    it "derives a marc-xml file from the mets file" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.write_marcxml_file
+      expect(File.file?(File.join(sipmaker.sip_dir, 'marc.xml'))).to be_truthy
     end
   end
 

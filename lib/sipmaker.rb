@@ -62,6 +62,7 @@ class SIPMaker
 #  end
 
   def initialize(issueid)
+    @issueid = issueid
     @bmtn_root = '/usr/share/BlueMountain'
     @sip_root  = '/tmp/sip'
     @checksums = {}
@@ -84,6 +85,7 @@ class SIPMaker
   def meta
     @@meta[@bmtnid].to_yaml
   end
+
 
   def copy_images_old
     @image_dir.each do |f|
@@ -117,7 +119,7 @@ class SIPMaker
   def copy_alto_files
     @alto_dir.each do |f|
       if f =~ /\.alto\.xml$/
-        target = File.join(@sip_dir.path, (seq_number(f) + '.alto.xml'))
+        target = File.join(@sip_dir.path, (seq_number(f) + '.xml'))
         FileUtils.cp File.join(@alto_dir.path, f),  target
       end
     end
@@ -143,6 +145,27 @@ class SIPMaker
   def write_meta_file
     File.open(File.join(@sip_dir.path, "meta.yml"), 'w').write(self.meta)
   end
+
+  # Nokogiri doesn't support xslt 2.0! And the 1.0 marc scripts are broken!!!!
+  def write_marcxml_file_old
+    template = Nokogiri::XSLT(File.read('/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/mets2marc.xsl'))
+    metsfile = File.join(@meta_dir, (@issueid + '.mets.xml'))
+    target = File.join(@sip_dir.path, 'marc.xml')
+    metsdoc = Nokogiri::XML(File.read(metsfile))
+    marcxml_doc = template.transform(metsdoc)
+    #    FileUtils.cp metsfile, target
+    File.open(target, 'w').write(marcxml_doc)
+  end
+
+  def write_marcxml_file
+    metsfile = File.join(@meta_dir, (@issueid + '.mets.xml'))
+    target = File.join(@sip_dir.path, 'marc.xml')
+    stylesheetpath = '/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/mets2marc.xsl'
+    cmd = "saxon " + metsfile + " -xsl:" + stylesheetpath
+    marcxml_doc = `#{cmd}`
+    File.open(target, 'w').write(marcxml_doc)
+  end
+
 
   def update_checksums
     @sip_dir.each do |f|
