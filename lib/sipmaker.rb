@@ -169,8 +169,10 @@ class SIPMaker
 
   def update_checksums
     @sip_dir.each do |f|
-      fp = File.join(@sip_dir, f)
-      @checksums[f] = Digest::MD5.file(fp).hexdigest if File.file?(fp)
+      unless f.eql? "checksum.md5"
+        fp = File.join(@sip_dir, f)
+        @checksums[f] = Digest::MD5.file(fp).hexdigest if File.file?(fp)
+      end
     end
   end
 
