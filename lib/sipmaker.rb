@@ -86,15 +86,6 @@ class SIPMaker
     @@meta[@bmtnid].to_yaml
   end
 
-
-  def copy_images_old
-    @image_dir.each do |f|
-      if f =~ /\.jp2$/
-        FileUtils.cp File.join(@image_dir.path, f),  @sip_dir
-      end
-    end
-  end
-
   def copy_images
     Dir.glob(File.join(@image_path, '*.jp2')).each_with_index do |f,i|
       target = File.join(@sip_dir.path, (seq_number(f) + '.jp2'))
@@ -108,14 +99,6 @@ class SIPMaker
     "%08d" % num.to_i
   end
 
-  def copy_alto_files_old
-    @alto_dir.each do |f|
-      if f =~ /\.alto\.xml$/
-        FileUtils.cp File.join(@alto_dir.path, f),  @sip_dir
-      end
-    end
-  end
-
   def copy_alto_files
     @alto_dir.each do |f|
       if f =~ /\.alto\.xml$/
@@ -125,25 +108,42 @@ class SIPMaker
     end
   end
 
+  def alto2txt_path
+    File.expand_path("../alto2txt.xsl", __FILE__)
+  end
+
   def generate_txt_files
+    stylesheetpath = '/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'
+    @alto_dir.each do |filename|
+      if filename =~ /\.alto\.xml$/
+        filepath = File.join(@alto_dir.path, filename)
+        target = File.join(@sip_dir.path, (seq_number(filename) + '.txt'))
+        cmd = "saxon " + filepath + " -xsl:" + stylesheetpath + ' -o:' + target
+        txt_doc = `#{cmd}`
+      end
+    end
+  end
+
+  def generate_txt_files_old
     # TODO parameterize this!
 
 #    template = Nokogiri::XSLT(File.read('/home/cwulfman/work/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
-    template = Nokogiri::XSLT(File.read('/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'))
+    xslpath = File.expand_path("../alto2txt.xsl", __FILE__)
+    template = Nokogiri::XSLT(File.read(xslpath))
     @alto_dir.each do |filename|
       if filename =~ /\.alto\.xml$/
-        target = File.join(@sip_dir.path, (seq_number(filename) + '.txt'))
         filepath = File.join(@alto_dir.path, filename)
         document = Nokogiri::XML(File.read(filepath))
         text_doc = template.transform(document)
-
-        File.open(target, 'w').write(text_doc)
+        target = File.join(@sip_dir.path, (seq_number(filename) + '.txt'))
+#        File.open(target, 'w').write(text_doc)
+        File.open(target, 'w') {|f| f.write(text_doc) }
       end
     end
   end
 
   def write_meta_file
-    File.open(File.join(@sip_dir.path, "meta.yml"), 'w').write(self.meta)
+    File.open(File.join(@sip_dir.path, "meta.yml"), 'w') { |f| f.write(self.meta) }
   end
 
   # Nokogiri doesn't support xslt 2.0! And the 1.0 marc scripts are broken!!!!
@@ -163,7 +163,8 @@ class SIPMaker
     stylesheetpath = '/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/mets2marc.xsl'
     cmd = "saxon " + metsfile + " -xsl:" + stylesheetpath
     marcxml_doc = `#{cmd}`
-    File.open(target, 'w').write(marcxml_doc)
+#    File.open(target, 'w').write(marcxml_doc)
+    File.open(target, 'w') { |f| f.write(marcxml_doc) }
   end
 
 
@@ -184,6 +185,16 @@ class SIPMaker
 
   def write_checksum_file
     File.open(File.join(@sip_dir.path, "checksum.md5"), 'wb') {|f| @checksums.each {|k,v| f << "#{v} #{k}\n"} }
+  end
+
+  def make_sip
+    self.copy_alto_files
+    self.copy_images
+    self.write_meta_file
+    self.write_marcxml_file
+    self.generate_txt_files
+    self.update_checksums
+    self.write_checksum_file
   end
 
 end

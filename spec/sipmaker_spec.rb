@@ -11,14 +11,6 @@ RSpec.describe 'SIPMaker' do
     end
   end
 
-  describe '.generate_txt_files' do
-    it "creates text files" do
-      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
-      sipmaker.generate_txt_files
-      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.txt'))).to be_truthy
-    end
-  end
-
   describe '.write_meta_file' do
     it "should create a file called meta.yml" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
@@ -51,6 +43,14 @@ RSpec.describe 'SIPMaker' do
     end
   end
 
+  describe '.generate_txt_files' do
+    it "creates text files" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.generate_txt_files
+      expect(File.file?(File.join(sipmaker.sip_dir, '00000008.txt'))).to be_truthy
+    end
+  end
+
   describe '.update_checksums' do
     it "updates the checksum hash" do
       sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
@@ -69,6 +69,12 @@ RSpec.describe 'SIPMaker' do
     end
   end
 
-
+  describe '.make_sip' do
+    it "generates the whole sip" do
+      sipmaker = SIPMaker.new('bmtnaad_1922-04_01') # Given
+      sipmaker.make_sip
+      expect(File.file?(File.join(sipmaker.sip_dir, 'checksum.md5'))).to be_truthy
+    end
+  end
 end
 
