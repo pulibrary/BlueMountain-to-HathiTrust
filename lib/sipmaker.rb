@@ -176,12 +176,12 @@ class SIPMaker
 
   def checksums
     @checksums.each do |k,v|
-      puts "#{k} #{v}"
+      puts "#{v} #{k}"
     end
   end
 
   def write_checksum_file
-    File.open(File.join(@sip_dir.path, "checksum.md5"), 'wb') {|f| @checksums.each {|k,v| f << "#{k} #{v}\n"} }
+    File.open(File.join(@sip_dir.path, "checksum.md5"), 'wb') {|f| @checksums.each {|k,v| f << "#{v} #{k}\n"} }
   end
 
 end
