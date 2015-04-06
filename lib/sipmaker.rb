@@ -184,7 +184,7 @@ class SIPMaker
   end
 
   def write_checksum_file
-    File.open(File.join(@sip_dir.path, "checksum.md5"), 'wb') {|f| @checksums.each {|k,v| f << "#{v} #{k}\n"} }
+    File.open(File.join(@sip_dir.path, "checksum.md5"), 'w') {|f| @checksums.each {|k,v| f << "#{v} #{k}\n"} }
   end
 
   def make_sip
