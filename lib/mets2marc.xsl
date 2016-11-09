@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 		xmlns:xlink="http://www.w3.org/1999/xlink"
 		xmlns:mods="http://www.loc.gov/mods/v3"
@@ -12,7 +12,7 @@
 <xsl:include href="./MODS3-4_MARC21slim_XSLT2-0.xsl" />
   <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
-  <xsl:template match="/">
+  <xsl:template match="/" priority="1">
     <xsl:apply-templates select="mets:mets/mets:dmdSec/mets:mdWrap[@MDTYPE='MODS']/mets:xmlData/mods:mods" />
   </xsl:template>
   

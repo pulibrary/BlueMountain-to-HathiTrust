@@ -113,7 +113,8 @@ class SIPMaker
   end
 
   def generate_txt_files
-    stylesheetpath = '/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'
+#    stylesheetpath = '/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/alto2txt.xsl'
+    stylesheetpath = File.expand_path("../alto2txt.xsl", __FILE__)
     @alto_dir.each do |filename|
       if filename =~ /\.alto\.xml$/
         filepath = File.join(@alto_dir.path, filename)
@@ -160,7 +161,7 @@ class SIPMaker
   def write_marcxml_file
     metsfile = File.join(@meta_dir, (@issueid + '.mets.xml'))
     target = File.join(@sip_dir.path, 'marc.xml')
-    stylesheetpath = '/Users/cwulfman/git/BlueMountain-to-HathiTrust/lib/mets2marc.xsl'
+    stylesheetpath = File.expand_path("../mets2marc.xsl", __FILE__)
     cmd = "saxon " + metsfile + " -xsl:" + stylesheetpath
     marcxml_doc = `#{cmd}`
 #    File.open(target, 'w').write(marcxml_doc)
