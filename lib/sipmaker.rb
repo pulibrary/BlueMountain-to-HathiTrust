@@ -45,7 +45,7 @@ class SIPMaker
     "bmtnabf" => {"scanner_make" => "Zeutschel", "scanner_model" => "Zeutschel Omniscan 11", "scanner_user" => "ImageGear Version:  13.07.000", "capture_date" => "2010-05-04T14:20:14-04:00"},
     "bmtnabg" => {"scanner_make" => "Leaf", "scanner_model" => "Leaf Aptus-II 12(LI301737)/Schneider Lens Control", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2012-05-01T11:00:22-05:00"},
     "bmtnabh" => {"scanner_make" => "Leaf", "scanner_model" => "Leaf Aptus-II 12(LI301737)/Schneider Lens Control", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2012-08-06T14:43:02-05:00"},
-    "bmtnabi" => {"scanner_make" => "Phase One", "scanner_model" => "P65+", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2011-05-26T18:29:41-04:00-5:00"},
+    "bmtnabi" => {"scanner_make" => "Phase One", "scanner_model" => "P65+", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2012-12-26T08:47:29-05:00"},
     "bmtnabj" => {"scanner_make" => "Leaf", "scanner_model" => "Leaf Aptus-II 12(LI301737)/Schneider Lens Control", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2012-10-25T14:13:59-05:00"},
     "bmtnabk" => {"scanner_make" => "Leaf", "scanner_model" => "Leaf Aptus-II 12(LI301737)/Schneider Lens Control", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2012-06-21T08:39:04-05:00"},
     "bmtnabl" => {"scanner_make" => "Leaf", "scanner_model" => "Leaf Aptus-II 12(LI301739)/Other", "scanner_user" => "Capture One 6 Macintosh", "capture_date" => "2013-05-02T10:02:51-05:00"},
